@@ -5,6 +5,7 @@ import { createPostSchema } from './types';
 import { z } from 'zod';
 import { postToX } from '@/ai/flows/post-to-x';
 import { postToFacebook } from '@/ai/flows/post-to-facebook';
+import { generateUniversalPost } from '@/ai/flows/generate-universal-post';
 
 export async function handleGeneratePost(values: z.infer<typeof createPostSchema>) {
   const validatedFields = createPostSchema.safeParse(values);
@@ -55,5 +56,25 @@ export async function handlePostToFacebook(content: string) {
     } catch (error) {
         console.error('Error posting to Facebook:', error);
         throw new Error('Failed to post to Facebook.');
+    }
+}
+
+const universalPostSchema = z.object({
+    topic: z.string(),
+});
+
+export async function handleGenerateUniversalPost(values: z.infer<typeof universalPostSchema>) {
+    const validatedFields = universalPostSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      throw new Error('Invalid input.');
+    }
+  
+    try {
+      const result = await generateUniversalPost(validatedFields.data);
+      return result;
+    } catch (error) {
+      console.error('Error generating universal post:', error);
+      throw new Error('Failed to generate universal post with AI.');
     }
 }

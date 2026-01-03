@@ -8,6 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 const pageTitles: { [key: string]: string } = {
   '/dashboard': 'Dashboard',
   '/create': 'Create Post',
+  '/autopx-all': 'Autopx All',
   '/scheduled': 'Scheduled Posts',
 };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Bot, CalendarClock, LayoutDashboard, PlusCircle } from 'lucide-react';
+import { Bot, CalendarClock, Globe, LayoutDashboard, PlusCircle } from 'lucide-react';
 import {
   SidebarHeader,
   SidebarContent,
@@ -22,6 +22,11 @@ const links = [
     href: '/create',
     label: 'Create Post',
     icon: PlusCircle,
+  },
+  {
+    href: '/autopx-all',
+    label: 'Autopx All',
+    icon: Globe,
   },
   {
     href: '/scheduled',
