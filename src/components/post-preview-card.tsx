@@ -4,10 +4,8 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
-import { Calendar as CalendarIcon, Copy, Facebook, Send, Twitter, Wand2 } from 'lucide-react';
+import { Copy, Facebook, Send, Twitter, Wand2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Calendar } from './ui/calendar';
 import { Skeleton } from './ui/skeleton';
 import { optimizeForPlatform } from '@/ai/flows/optimize-for-platform';
 import { cn } from '@/lib/utils';
@@ -106,18 +104,7 @@ export function PostPreviewCard({ platform, content: initialContent }: PostPrevi
             <Wand2 className="mr-2 h-4 w-4" />
             Suggest Hashtags
         </Button>
-        <Popover>
-            <PopoverTrigger asChild>
-                <Button variant="outline">
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    Schedule
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-                <Calendar mode="single" initialFocus />
-            </PopoverContent>
-        </Popover>
-        <Button onClick={handleCopy}>
+        <Button variant="outline" onClick={handleCopy}>
           <Copy className="mr-2 h-4 w-4" />
           Copy Post
         </Button>
