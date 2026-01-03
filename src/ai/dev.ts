@@ -7,3 +7,4 @@ import '@/ai/flows/optimize-for-platform.ts';
 import '@/ai/flows/post-to-x.ts';
 import '@/ai/flows/post-to-facebook.ts';
 import '@/ai/flows/generate-universal-post.ts';
+import '@/ai/flows/generate-audio.ts';

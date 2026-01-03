@@ -9,6 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { generateAudioFlow } from './generate-audio';
 
 const GenerateUniversalPostInputSchema = z.object({
   topic: z.string().describe('The topic for the content package.'),
@@ -21,6 +22,8 @@ const GenerateUniversalPostOutputSchema = z.object({
     longFormScript: z.string().describe('A 2-4 minute script for long-form video.'),
     onScreenCaptions: z.array(z.string()).describe('Sentence-based on-screen captions appearing every 2-3 seconds.'),
     postDescription: z.string().describe('A post description with a summary, depth signal, and continuation cue.'),
+    shortFormScriptAudio: z.string().describe('The audio data URI for the short form script.'),
+    longFormScriptAudio: z.string().describe('The audio data URI for the long form script.'),
 });
 export type GenerateUniversalPostOutput = z.infer<typeof GenerateUniversalPostOutputSchema>;
 
@@ -32,7 +35,7 @@ export async function generateUniversalPost(input: GenerateUniversalPostInput): 
 const generateUniversalPostPrompt = ai.definePrompt({
   name: 'generateUniversalPostPrompt',
   input: {schema: GenerateUniversalPostInputSchema},
-  output: {schema: GenerateUniversalPostOutputSchema},
+  output: {schema: GenerateUniversalPostOutputSchema.omit({ shortFormScriptAudio: true, longFormScriptAudio: true })},
   prompt: `You are a Senior AI Educator, Systems Thinker, and Technology Explainer creating faceless, high-retention educational content for a global audience named Peterdamianohq.
 
 You explain complex AI and tech concepts in a way that:
@@ -149,7 +152,21 @@ const generateUniversalPostFlow = ai.defineFlow(
     outputSchema: GenerateUniversalPostOutputSchema,
   },
   async input => {
-    const {output} = await generateUniversalPostPrompt(input);
-    return output!;
+    const {output: textOutput} = await generateUniversalPostPrompt(input);
+    
+    if (!textOutput) {
+        throw new Error('Failed to generate text content.');
+    }
+
+    const [shortAudio, longAudio] = await Promise.all([
+        generateAudioFlow(textOutput.shortFormScript),
+        generateAudioFlow(textOutput.longFormScript),
+    ]);
+    
+    return {
+        ...textOutput,
+        shortFormScriptAudio: shortAudio.media,
+        longFormScriptAudio: longAudio.media,
+    };
   }
 );

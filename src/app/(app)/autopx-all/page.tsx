@@ -19,7 +19,6 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles } from 'lucide-react';
 import { handleGenerateUniversalPost } from '@/lib/actions';
 import type { GenerateUniversalPostOutput } from '@/ai/flows/generate-universal-post';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -132,11 +131,17 @@ export default function AutopxAllPage() {
             </Card>
             <Card>
               <CardHeader><CardTitle>Short-Form Script (30-60s)</CardTitle></CardHeader>
-              <CardContent className="prose prose-sm dark:prose-invert whitespace-pre-wrap">{generatedContent.shortFormScript}</CardContent>
+              <CardContent className="space-y-4">
+                <audio controls src={generatedContent.shortFormScriptAudio} className="w-full" />
+                <div className="prose prose-sm dark:prose-invert whitespace-pre-wrap">{generatedContent.shortFormScript}</div>
+              </CardContent>
             </Card>
             <Card>
               <CardHeader><CardTitle>Long-Form Script (2-4 mins)</CardTitle></CardHeader>
-              <CardContent className="prose prose-sm dark:prose-invert whitespace-pre-wrap">{generatedContent.longFormScript}</CardContent>
+               <CardContent className="space-y-4">
+                <audio controls src={generatedContent.longFormScriptAudio} className="w-full" />
+                <div className="prose prose-sm dark:prose-invert whitespace-pre-wrap">{generatedContent.longFormScript}</div>
+              </CardContent>
             </Card>
              <Card>
               <CardHeader><CardTitle>On-Screen Captions</CardTitle></CardHeader>
