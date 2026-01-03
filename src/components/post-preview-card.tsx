@@ -11,7 +11,7 @@ import { Calendar } from './ui/calendar';
 import { Skeleton } from './ui/skeleton';
 import { optimizeForPlatform } from '@/ai/flows/optimize-for-platform';
 import { cn } from '@/lib/utils';
-import { handlePostToX } from '@/lib/actions';
+import { handlePostToFacebook, handlePostToX } from '@/lib/actions';
 import { Loader2 } from 'lucide-react';
 
 
@@ -54,14 +54,22 @@ export function PostPreviewCard({ platform, content: initialContent }: PostPrevi
     }
   }
 
-  const onPostToX = async () => {
+  const onPost = async () => {
     setIsPosting(true);
     try {
-      await handlePostToX(content);
-      toast({
-        title: 'Posted to X!',
-        description: 'Your post has been successfully sent.',
-      });
+      if (platform === 'x') {
+        await handlePostToX(content);
+        toast({
+          title: 'Posted to X!',
+          description: 'Your post has been successfully sent.',
+        });
+      } else if (platform === 'facebook') {
+        await handlePostToFacebook(content);
+        toast({
+            title: 'Posted to Facebook!',
+            description: 'Your post has been successfully sent.',
+          });
+      }
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -113,16 +121,14 @@ export function PostPreviewCard({ platform, content: initialContent }: PostPrevi
           <Copy className="mr-2 h-4 w-4" />
           Copy Post
         </Button>
-        {platform === 'x' && (
-          <Button onClick={onPostToX} disabled={isPosting}>
+        <Button onClick={onPost} disabled={isPosting}>
             {isPosting ? (
               <Loader2 className="animate-spin" />
             ) : (
               <Send className="mr-2 h-4 w-4" />
             )}
-            Post to X
+            Post to {platformTitle}
           </Button>
-        )}
       </CardFooter>
     </Card>
   );
