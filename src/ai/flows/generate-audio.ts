@@ -2,9 +2,9 @@
 /**
  * @fileOverview A Genkit flow that converts text to speech.
  *
- * - generateAudioFlow - A function that takes text and returns audio.
- * - GenerateAudioInput - The input type for the generateAudioFlow function.
- * - GenerateAudioOutput - The return type for the generateAudioFlow function.
+ * - generateAudio - A function that takes text and returns audio.
+ * - GenerateAudioInput - The input type for the generateAudio function.
+ * - GenerateAudioOutput - The return type for the generateAudio function.
  */
 
 import { ai } from '@/ai/genkit';
@@ -19,6 +19,10 @@ const GenerateAudioOutputSchema = z.object({
   media: z.string().describe('The base64 encoded audio data URI.'),
 });
 export type GenerateAudioOutput = z.infer<typeof GenerateAudioOutputSchema>;
+
+export async function generateAudio(input: GenerateAudioInput): Promise<GenerateAudioOutput> {
+    return generateAudioFlow(input);
+}
 
 async function toWav(
   pcmData: Buffer,
@@ -45,7 +49,7 @@ async function toWav(
   });
 }
 
-export const generateAudioFlow = ai.defineFlow(
+const generateAudioFlow = ai.defineFlow(
   {
     name: 'generateAudioFlow',
     inputSchema: GenerateAudioInputSchema,

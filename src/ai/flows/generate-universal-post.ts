@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { generateAudioFlow } from './generate-audio';
+import { generateAudio } from './generate-audio';
 
 const GenerateUniversalPostInputSchema = z.object({
   topic: z.string().describe('The topic for the content package.'),
@@ -159,8 +159,8 @@ const generateUniversalPostFlow = ai.defineFlow(
     }
 
     const [shortAudio, longAudio] = await Promise.all([
-        generateAudioFlow(textOutput.shortFormScript),
-        generateAudioFlow(textOutput.longFormScript),
+        generateAudio(textOutput.shortFormScript),
+        generateAudio(textOutput.longFormScript),
     ]);
     
     return {
