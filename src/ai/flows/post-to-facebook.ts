@@ -42,7 +42,7 @@ const postToFacebookFlow = ai.defineFlow(
         return { success: false };
     }
 
-    const url = `https://graph.facebook.com/v20.0/${pageId}/feed`;
+    const url = `https://graph.facebook.com/v20.0/${pageId}/feed?access_token=${accessToken}`;
 
     try {
         const response = await fetch(url, {
@@ -52,7 +52,6 @@ const postToFacebookFlow = ai.defineFlow(
             },
             body: JSON.stringify({
                 message: input.text,
-                access_token: accessToken,
             }),
         });
 
