@@ -19,6 +19,7 @@ export type PostToFacebookInput = z.infer<typeof PostToFacebookInputSchema>;
 const PostToFacebookOutputSchema = z.object({
   success: z.boolean().describe('Whether the post was successful.'),
   postId: z.string().optional().describe('The ID of the created post.'),
+  error: z.string().optional().describe('Error message if the post failed.'),
 });
 export type PostToFacebookOutput = z.infer<typeof PostToFacebookOutputSchema>;
 
@@ -38,8 +39,9 @@ const postToFacebookFlow = ai.defineFlow(
     const accessToken = process.env.FACEBOOK_PAGE_ACCESS_TOKEN;
 
     if (!pageId || !accessToken) {
-        console.error('Facebook credentials are not configured.');
-        return { success: false };
+        const error = 'Facebook credentials are not configured in environment variables.';
+        console.error(error);
+        return { success: false, error };
     }
 
     const url = `https://graph.facebook.com/${pageId}/feed`;
@@ -58,9 +60,11 @@ const postToFacebookFlow = ai.defineFlow(
 
         const result = await response.json();
 
-        if (!response.ok || result.error) {
-            console.error('Failed to post to Facebook:', result.error?.message || 'Unknown error');
-            return { success: false };
+        if (!response.ok) {
+            const errorDetails = result.error ? `Code: ${result.error.code}, Message: ${result.error.message}` : `Status: ${response.status}, Body: ${JSON.stringify(result)}`;
+            const error = `Failed to post to Facebook. ${errorDetails}`;
+            console.error(error);
+            return { success: false, error };
         }
       
       console.log('Facebook post successful:', result.id);
@@ -68,10 +72,12 @@ const postToFacebookFlow = ai.defineFlow(
         success: true,
         postId: result.id,
       };
-    } catch (e) {
-        console.error('Failed to post to Facebook', e);
+    } catch (e: any) {
+        const error = `An exception occurred while trying to post to Facebook: ${e.message}`;
+        console.error(error, e);
         return {
             success: false,
+            error,
         }
     }
   }

@@ -51,7 +51,7 @@ export async function handlePostToFacebook(content: string) {
     try {
         const result = await postToFacebook({ text: content });
         if (!result.success) {
-            throw new Error('The API failed to post to Facebook.');
+            throw new Error(result.error || 'The API failed to post to Facebook.');
         }
         return result;
     } catch (error) {
