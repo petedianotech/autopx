@@ -8,6 +8,7 @@ import { postToFacebook } from '@/ai/flows/post-to-facebook';
 import { generateUniversalPost } from '@/ai/flows/generate-universal-post';
 import { generateAudio } from '@/ai/flows/generate-audio';
 import { generatePostTitles } from '@/ai/flows/generate-post-titles';
+import { generateTopicIdeas } from '@/ai/flows/generate-topic-ideas';
 
 export async function handleGeneratePost(values: z.infer<typeof createPostSchema>) {
   const validatedFields = createPostSchema.safeParse(values);
@@ -118,5 +119,15 @@ export async function handleGenerateTitles(values: z.infer<typeof titleGenSchema
     } catch (error) {
         console.error('Error generating titles:', error);
         throw new Error('Failed to generate titles with AI.');
+    }
+}
+
+export async function handleGenerateTopicIdeas() {
+    try {
+        const result = await generateTopicIdeas();
+        return result;
+    } catch (error) {
+        console.error('Error generating topic ideas:', error);
+        throw new Error('Failed to generate topic ideas with AI.');
     }
 }

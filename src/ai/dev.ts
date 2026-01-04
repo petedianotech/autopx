@@ -9,3 +9,4 @@ import '@/ai/flows/post-to-facebook.ts';
 import '@/ai/flows/generate-universal-post.ts';
 import '@/ai/flows/generate-audio.ts';
 import '@/ai/flows/generate-post-titles.ts';
+import '@/ai/flows/generate-topic-ideas.ts';
