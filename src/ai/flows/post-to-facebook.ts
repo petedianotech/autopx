@@ -42,7 +42,7 @@ const postToFacebookFlow = ai.defineFlow(
         return { success: false };
     }
 
-    const url = `https://graph.facebook.com/v20.0/${pageId}/feed?access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/${pageId}/feed`;
 
     try {
         const response = await fetch(url, {
@@ -52,13 +52,14 @@ const postToFacebookFlow = ai.defineFlow(
             },
             body: JSON.stringify({
                 message: input.text,
+                access_token: accessToken,
             }),
         });
 
         const result = await response.json();
 
-        if (!response.ok) {
-            console.error('Failed to post to Facebook:', result.error.message);
+        if (!response.ok || result.error) {
+            console.error('Failed to post to Facebook:', result.error?.message || 'Unknown error');
             return { success: false };
         }
       
